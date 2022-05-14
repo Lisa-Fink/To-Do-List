@@ -1,4 +1,5 @@
 import { Todo } from "./classes";
+import { sideRender } from "./side";
 
 let thisProject = null
 
@@ -51,10 +52,12 @@ const create = (() => {
         todoForm.appendChild(dateInput)
 
         const addButton = document.createElement('button')
+        addButton.innerText = ' Add Task '
         addButton.addEventListener('click', projectControl.makeNewTodo)
 
         const cancelButton = document.createElement('button')
-        cancelButton.addEventListener('click', projectRender.toggleTodoForm)
+        cancelButton.innerText = ' Cancel '
+        cancelButton.addEventListener('click', projectControl.cancelTodoForm)
 
         todoForm.appendChild(addButton)
         todoForm.appendChild(cancelButton)
@@ -96,9 +99,10 @@ const projectRender = (() => {
     }
 
     const clearTodoForm = () => {
-        const inputs = document.getElementsByClassName('todo-input')
+        const inputs = document.querySelectorAll('.todo-input')
+        inputs.forEach(input => input.value = '')
     }
-    return {projectPage, toggleTodoForm, update}
+    return {projectPage, toggleTodoForm, update, clearTodoForm}
 })()
 
 const projectControl = (() => {
@@ -135,7 +139,12 @@ const projectControl = (() => {
         thisProject.removeTodo(index)
         projectRender.update()
     }
-    return {makeNewTodo, setProject, makePage};
+    const cancelTodoForm = (e) => {
+        e.preventDefault()
+        projectRender.toggleTodoForm()
+        projectRender.clearTodoForm()
+    }
+    return {makeNewTodo, setProject, makePage, cancelTodoForm};
 
 })()
 
