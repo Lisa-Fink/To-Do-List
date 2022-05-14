@@ -67,7 +67,7 @@ const create = (() => {
     const addTodoBtn = () => {
         const addTodo = document.createElement('div')
         addTodo.innerText = 'Add Task +'
-        addTodo.addEventListener('click', projectRender.toggleTodoForm)
+        addTodo.addEventListener('click', projectRender.showTodoForm)
         return addTodo
     }
     return {addTodoBtn, todoForm, todoList, heading}
@@ -86,12 +86,15 @@ const projectRender = (() => {
         contentDiv.appendChild(create.addTodoBtn())
     }
 
-    const toggleTodoForm = () => {
+    const showTodoForm = () => {
+        const todoForm = document.getElementById('to-do-form')
+        todoForm.style.display != 'block' ? 
+            todoForm.style.display = 'block': null
+    }
+    const hideTodoForm = () => {
         const todoForm = document.getElementById('to-do-form')
         todoForm.style.display == 'block' ? 
-            (todoForm.style.display = 'none', clearTodoForm):
-            todoForm.style.display = 'block'
-     
+            (todoForm.style.display = 'none', clearTodoForm): null
     }
 
     const update = () => {
@@ -102,7 +105,7 @@ const projectRender = (() => {
         const inputs = document.querySelectorAll('.todo-input')
         inputs.forEach(input => input.value = '')
     }
-    return {projectPage, toggleTodoForm, update, clearTodoForm}
+    return {projectPage, showTodoForm, hideTodoForm, update, clearTodoForm}
 })()
 
 const projectControl = (() => {
@@ -120,7 +123,7 @@ const projectControl = (() => {
         let todoInfo = getTodoInfo(e)
         let newTodo = createTodo(todoInfo[0], todoInfo[1], todoInfo[2]);
         thisProject.addTodo(newTodo)
-        projectRender.toggleTodoForm()
+        projectRender.showTodoForm()
         projectRender.update()
     }
 
@@ -141,7 +144,7 @@ const projectControl = (() => {
     }
     const cancelTodoForm = (e) => {
         e.preventDefault()
-        projectRender.toggleTodoForm()
+        projectRender.hideTodoForm()
         projectRender.clearTodoForm()
     }
     return {makeNewTodo, setProject, makePage, cancelTodoForm};

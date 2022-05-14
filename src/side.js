@@ -25,7 +25,7 @@ const sideControl = (() => {
         const name = sideFunc.getInputName();
         let newProject = sideFunc.createProject(name);
         todoLists.addProject(newProject);
-        sideRender.toggleProjectInput();
+        sideRender.hideProjectInput();
         sideRender.update();
     }
 
@@ -41,7 +41,7 @@ const sideControl = (() => {
     }
     const cancelProjectInput = () => {
         sideRender.clearInput();
-        sideRender.toggleProjectInput();
+        sideRender.hideProjectInput();
     }
     return {makeNewProject, removeProject, selectProject, cancelProjectInput};
 })()
@@ -69,17 +69,22 @@ const sideRender = (() => {
     const clearInput = () => {
         input.value = '';
     }
-    const toggleProjectInput = () => {
+    const showProjectInput = () => {
+        const inputDiv = document.getElementById('add-project-input');
+        inputDiv.style.display != 'block' ? inputDiv.style.display = 'block':
+            null
+    }
+    const hideProjectInput = () => {
         const inputDiv = document.getElementById('add-project-input');
         inputDiv.style.display == 'block' ? inputDiv.style.display = 'none':
-            inputDiv.style.display = 'block';
+            null
     }
-    return {update, toggleProjectInput, clearInput};
+    return {update, showProjectInput, hideProjectInput, clearInput};
 })();
 
 const eventListeners = (() => {
     const addProject = document.getElementById('add-project');
-    addProject.addEventListener('click', sideRender.toggleProjectInput);
+    addProject.addEventListener('click', sideRender.showProjectInput);
 
     const addButton = document.getElementById('add-button');
     const cancelButton = document.getElementById('cancel-button');
