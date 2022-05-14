@@ -1,8 +1,8 @@
 import {ToDoList, Project, Todo} from './classes';
-import goToProjectPage from '.';
+import {contentController, todoLists} from '.';
 
 
-const todoLists = new ToDoList;
+
 
 const sideFunc = (() => {
     const createProject = (name) => {
@@ -16,8 +16,11 @@ const sideFunc = (() => {
     const getProject = (e) => {
         return e.target.data;
     }
+    const getTaskType = (e) => {
+        return e.target.attributes[0].nodeValue;
+    }
     
-    return {createProject, getInputName, getProject};
+    return {createProject, getInputName, getProject, getTaskType};
 })()
 
 const sideControl = (() => {
@@ -34,16 +37,21 @@ const sideControl = (() => {
         todoLists.removeProject(index);
         sideRender.update();
     }
-
+    const selectTask = (e) => {
+        const taskType = sideFunc.getTaskType(e);
+        // console.log(taskType)
+        contentController.goToTasks(taskType);
+    }
     const selectProject = (e) => {
         const projectClicked = sideFunc.getProject(e);
-        goToProjectPage(projectClicked);
+        contentController.goToProjectPage(projectClicked);
     }
     const cancelProjectInput = () => {
         sideRender.clearInput();
         sideRender.hideProjectInput();
     }
-    return {makeNewProject, removeProject, selectProject, cancelProjectInput};
+    return {makeNewProject, removeProject, selectProject, cancelProjectInput,
+        selectTask};
 })()
 
 const sideRender = (() => {
@@ -93,6 +101,9 @@ const eventListeners = (() => {
 
     const projectSelect = document.getElementById('projects');
     projectSelect.addEventListener('click', sideControl.selectProject);
+
+    const taskSelect = document.getElementById('task-view')
+    taskSelect.addEventListener('click', sideControl.selectTask)
 })();
 
 export {sideRender, eventListeners, sideControl, sideFunc};

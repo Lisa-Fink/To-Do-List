@@ -2,10 +2,21 @@ import './style.css';
 import {sideRender, sideControl, sideFunc} from './side';
 import {ToDoList, Project, Todo} from './classes';
 import projectControl from './projectPage';
+import taskControl from './tasksPage';
 
-const goToProjectPage = (project) => {
-    projectControl.makePage(project)
-}
+const todoLists = new ToDoList;
 
 
-export default goToProjectPage
+const contentController = (() => {
+    const goToProjectPage = (project) => {
+        projectControl.makePage(project);
+    }
+    const goToTasks = (taskType) => {
+        taskControl.makeTasksPage(taskType);
+    } 
+    return {goToProjectPage, goToTasks};
+})();
+
+
+
+export {contentController, todoLists};

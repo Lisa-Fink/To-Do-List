@@ -1,5 +1,4 @@
 import { Todo } from "./classes";
-import { sideRender } from "./side";
 
 let thisProject = null
 
