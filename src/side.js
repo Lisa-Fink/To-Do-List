@@ -1,8 +1,6 @@
-import {ToDoList, Project, Todo} from './classes';
-import {contentController, todoLists} from '.';
-
-
-
+import {ToDoList, Project, Todo, todoLists} from './classes';
+import {contentController} from '.';
+import { allProjRender } from './allProjects';
 
 const sideFunc = (() => {
     const createProject = (name) => {
@@ -39,7 +37,6 @@ const sideControl = (() => {
     }
     const selectTask = (e) => {
         const taskType = sideFunc.getTaskType(e);
-        // console.log(taskType)
         contentController.goToTasks(taskType);
     }
     const selectProject = (e) => {
@@ -50,6 +47,7 @@ const sideControl = (() => {
         sideRender.clearInput();
         sideRender.hideProjectInput();
     }
+
     return {makeNewProject, removeProject, selectProject, cancelProjectInput,
         selectTask};
 })()
@@ -60,6 +58,7 @@ const sideRender = (() => {
     const update = () => {
         clear();
         sidebar();
+        allProjRender.update();
     }
 
     const sidebar = () => {
@@ -72,7 +71,7 @@ const sideRender = (() => {
     }
     const clear = () => {
         projectUl.innerHTML = '';
-        input.value = '';
+        clearInput()
     }
     const clearInput = () => {
         input.value = '';
@@ -106,4 +105,6 @@ const eventListeners = (() => {
     taskSelect.addEventListener('click', sideControl.selectTask)
 })();
 
-export {sideRender, eventListeners, sideControl, sideFunc};
+sideRender.update()
+
+export {sideRender, sideControl, sideFunc};

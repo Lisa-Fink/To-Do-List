@@ -1,10 +1,10 @@
 import './style.css';
 import {sideRender, sideControl, sideFunc} from './side';
-import {ToDoList, Project, Todo} from './classes';
+import {ToDoList, Project, Todo, todoLists} from './classes';
 import projectControl from './projectPage';
-import taskControl from './tasksPage';
+import taskControl from './sideHome';
 
-const todoLists = new ToDoList;
+
 
 
 
@@ -18,19 +18,13 @@ const contentController = (() => {
     return {goToProjectPage, goToTasks};
 })();
 
-// add project for testing
-let todo1 = new Todo('todo1')
-todo1.description = 'this is a description'
-let todo2 = new Todo('todo2')
-let todo3 = new Todo('todo3')
-
-let proj1 = new Project(1)
-proj1.addTodo(todo1)
-proj1.addTodo(todo2)
-proj1.addTodo(todo3)
-
-todoLists.addProject(proj1)
+const makeIcon = (name) => {
+    const span = document.createElement('span');
+    span.classList.add('material-symbols-outlined');
+    span.innerText = name
+    return span
+}
 
 
 
-export {contentController, todoLists};
+export {contentController, makeIcon};

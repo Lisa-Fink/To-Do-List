@@ -23,6 +23,7 @@ class ToDoList {
 }
 
 
+
 class Project {
     constructor(name) {
         this.name = name;
@@ -54,6 +55,17 @@ class Todo {
         this.date = date
     }
 }
+// add project for testing
+let todo1 = new Todo('todo1')
+todo1.description = 'this is a description'
+let todo2 = new Todo('todo2')
+let todo3 = new Todo('todo3')
 
+let proj1 = new Project('Default Project')
+proj1.addTodo(todo1)
+proj1.addTodo(todo2)
+proj1.addTodo(todo3)
+const todoLists = new ToDoList;
+todoLists.addProject(proj1)
 
-export {ToDoList, Project, Todo}
+export {ToDoList, Project, Todo, todoLists}

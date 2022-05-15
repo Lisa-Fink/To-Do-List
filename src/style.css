@@ -70,10 +70,22 @@ body {
     padding: 15px;
 }
 
-#task-ul > li {
+.task-ul > li {
     padding: 15px;
 }
 
 .description {
     margin-left: 15px;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }

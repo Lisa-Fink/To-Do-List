@@ -17,6 +17,7 @@ const todoCreate = (() => {
     
     const todoList = () => {
         const ul = document.createElement('ul')
+        ul.classList.add('task-ul')
         let i = 1 
         if (thisProject.todos) {
             for (let task of thisProject.todos) {
@@ -126,7 +127,8 @@ const todoCreate = (() => {
         detailLabel.innerText = 'Details(optional): ';
         const detailInput = document.createElement('input');
         detailInput.classList.add('todo-input');
-        detailInput.value = selectedTodo.description
+        detailInput.value = selectedTodo.description ? 
+            selectedTodo.description : ''
     
         const dateLabel = document.createElement('label');
         dateLabel.innerText = 'Date: ';
