@@ -60,3 +60,20 @@ body {
 #to-do-form {
     display: none;
 }
+
+.task-list {
+    display: flex;
+    gap: 5px 80px;
+}
+
+.task-list > div > span {
+    padding: 15px;
+}
+
+#task-ul > li {
+    padding: 15px;
+}
+
+.description {
+    margin-left: 15px;
+}

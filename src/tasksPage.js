@@ -18,6 +18,8 @@ const taskControl = (() => {
             return taskArr;
         }
     }
+    
+
     return {makeTasksPage, getTasks};
 })()
 
@@ -30,17 +32,24 @@ const create = (() => {
     }
     const taskList = (tasks) => {
         const ul = document.createElement('ul');
+        ul.id = 'task-ul'
         
         if (tasks) {
             for (let task of tasks) {
-                let li = document.createElement('li');
-                li.innerText = task.name;
-                ul.appendChild(li);
+                let li = document.createElement('li')
+                li.innerText = task.name
+                if (task.description) {
+                    let description = document.createElement('div');
+                    description.classList.add('description')
+                    description.innerText = task.description;
+                    li.appendChild(description)
+                }
+                ul.appendChild(li);      
             }
-
         }
         return ul;
     }
+    
     return {heading, taskList};
 })()
 
