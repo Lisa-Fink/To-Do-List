@@ -261,7 +261,6 @@ const projectControl = (() => {
         thisProject.addTodo(newTodo)
         projectRender.showTodoForm()
         projectRender.update()
-        console.log(newTodo)
     }
 
     const getTodoInfo = (e) => {
@@ -311,7 +310,6 @@ const projectControl = (() => {
     }
     const starClick = (e) => {
         const todo = e.target.data;
-        console.log(e)
         todo.important ? 
             (e.target.classList.remove('important'),
                 e.target.innerText = 'grade',
@@ -321,7 +319,6 @@ const projectControl = (() => {
                 todo.important = true);
     }
     const changeStatus = (e) => {
-        console.log(e)
         const todo = e.target.data;
         todo.complete ? todo.complete = false: todo.complete = true;
         projectRender.update();
