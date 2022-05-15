@@ -131,4 +131,4 @@ const allProjRender = (() => {
     return {page, update, changeToInput};
 })()
 
-export {allProjControl, allProjRender};
+export {allProjControl, allProjRender, makeIcon};

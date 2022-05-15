@@ -1,5 +1,6 @@
 import { Todo } from "./classes";
 import { sideRender } from "./side";
+import {makeIcon} from "./allProjects";
 
 let thisProject = null
 
@@ -48,16 +49,14 @@ const todoCreate = (() => {
 
     const changerDiv = () => {
         let changeDiv = document.createElement('div');
-        let remove = document.createElement('span');
-        remove.innerText = 'remove';
-        let edit = document.createElement('span');
-        edit.innerText = 'edit';
+        let edit = makeIcon('edit')
+        let remove = makeIcon('delete_forever')
 
         remove.addEventListener('click', projectControl.removeTodo)
         edit.addEventListener('click', projectControl.editTodo)
 
-        changeDiv.appendChild(remove);
         changeDiv.appendChild(edit);
+        changeDiv.appendChild(remove);
         return changeDiv;
     }
     
@@ -90,12 +89,11 @@ const todoCreate = (() => {
         todoForm.appendChild(dateLabel);
         todoForm.appendChild(dateInput);
 
-        const addButton = document.createElement('button')
-        addButton.innerText = ' Add Task '
+        const addButton = makeIcon('check_circle')
+        
         addButton.addEventListener('click', projectControl.makeNewTodo)
 
-        const cancelButton = document.createElement('button')
-        cancelButton.innerText = ' Cancel '
+        const cancelButton = makeIcon('cancel')
         cancelButton.addEventListener('click', projectControl.cancelTodoForm)
 
         todoForm.appendChild(addButton)
@@ -106,7 +104,8 @@ const todoCreate = (() => {
     
     const addTodoBtn = () => {
         const addTodo = document.createElement('div')
-        addTodo.innerText = 'Add Task +'
+        addTodo.innerText = 'Add Task '
+        addTodo.appendChild(makeIcon('add_circle'))
         addTodo.addEventListener('click', projectRender.showTodoForm)
         return addTodo
     }
@@ -145,12 +144,10 @@ const todoCreate = (() => {
         todoForm.appendChild(dateLabel);
         todoForm.appendChild(dateInput);
 
-        const addButton = document.createElement('button')
-        addButton.innerText = ' Edit Task '
+        const addButton = makeIcon('check_circle')
         addButton.addEventListener('click', projectControl.makeTodoEdit)
 
-        const cancelButton = document.createElement('button')
-        cancelButton.innerText = ' Cancel '
+        const cancelButton = makeIcon('cancel')
         cancelButton.addEventListener('click', projectControl.cancelEditTodoForm)
 
         todoForm.appendChild(addButton)
@@ -221,9 +218,10 @@ const projectControl = (() => {
     }
 
     const getTodoInfo = (e) => {
-        const name = e.target.form[0].value
-        const details = e.target.form[1].value
-        const date = e.target.form[2].value
+        e.preventDefault()
+        const name = e.target.parentElement[0].value
+        const details = e.target.parentElement[1].value
+        const date = e.target.parentElement[2].value
         return [name, details, date]
     }
     const createTodo = (name, description, date) => {
