@@ -13,16 +13,14 @@ class ToDoList {
             }
         }
     }
-    findIndex(project) {
-        const index = this.projects.findIndex(project);
-        return index
+    getIndex(project) {
+        const index = this.projects.findIndex(x => x == project);
+        return index;
     }
     removeProject(index) {
         this.projects = this.projects.slice(0,index).concat(this.projects.slice(index+1));
     }
 }
-
-
 
 class Project {
     constructor(name) {
@@ -38,10 +36,6 @@ class Project {
                 return object;
             }
         }
-    }
-    findIndex(todo) {
-        const index = this.todos.findIndex(todo);
-        return index;
     }
     removeTodo(index) {
         this.todos = this.todos.slice(0,index).concat(this.todos.slice(index+1));

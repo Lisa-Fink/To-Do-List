@@ -5,8 +5,12 @@ import projectControl from './projectPage';
 import taskControl from './sideHome';
 
 
-
-
+const makeIcon = (name) => {
+    const span = document.createElement('span');
+    span.classList.add('material-symbols-outlined');
+    span.innerText = name;
+    return span;
+}
 
 const contentController = (() => {
     const goToProjectPage = (project) => {
@@ -17,14 +21,5 @@ const contentController = (() => {
     } 
     return {goToProjectPage, goToTasks};
 })();
-
-const makeIcon = (name) => {
-    const span = document.createElement('span');
-    span.classList.add('material-symbols-outlined');
-    span.innerText = name
-    return span
-}
-
-
 
 export {contentController, makeIcon};
