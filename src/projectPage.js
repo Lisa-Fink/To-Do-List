@@ -25,6 +25,7 @@ const todoCreate = (() => {
                 li.id = i;
                 li.data = task;
                 let topDiv = document.createElement('div');
+
                 let nameDiv = document.createElement('div');
                 nameDiv.innerText = task.name;
 
@@ -34,8 +35,8 @@ const todoCreate = (() => {
                 } else {
                     dateDiv.innerText = 'No Due Date';
                 }
-                
-                let taskChangeDiv = changerDiv(project);
+
+                let taskChangeDiv = changerDiv(project, task);
                 taskChangeDiv.data = i;
 
                 topDiv.appendChild(nameDiv);
@@ -62,15 +63,26 @@ const todoCreate = (() => {
     }
     
 
-    const changerDiv = (project) => {
+    const changerDiv = (project, task) => {
         let changeDiv = document.createElement('div');
+        
+        let star = null
+        if (task.important) {
+            star = makeIcon('star');
+            star.classList.add('important');
+        } else {
+            star = makeIcon('grade');
+        }
+        star.data = task;
         let edit = makeIcon('edit');
         let remove = makeIcon('delete_forever');
-        remove.data = project
+        remove.data = project;
 
+        star.addEventListener('click', projectControl.starClick);
         remove.addEventListener('click', projectControl.removeTodo);
         edit.addEventListener('click', projectControl.editTodo);
 
+        changeDiv.appendChild(star);
         changeDiv.appendChild(edit);
         changeDiv.appendChild(remove);
         return changeDiv;
@@ -283,9 +295,20 @@ const projectControl = (() => {
         selectedTodo.date = values[2]
         projectRender.update()
     }
+    const starClick = (e) => {
+        const todo = e.target.data;
+        console.log(e)
+        todo.important ? 
+            (e.target.classList.remove('important'),
+                e.target.innerText = 'grade',
+                todo.important = false) :
+            (e.target.classList.add('important'),
+                e.target.innerText = 'star',
+                todo.important = true);
+    }
     
     return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo, 
-            cancelEditTodoForm, makeTodoEdit, removeTodo};
+            cancelEditTodoForm, makeTodoEdit, removeTodo, starClick};
 
 })()
 
