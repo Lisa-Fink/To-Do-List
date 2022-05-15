@@ -32,7 +32,7 @@ class Project {
         this.todos.push(todo);
     }
     findTodo(name) {
-        for (object of this.todos) {
+        for (let object of this.todos) {
             if (object.name == name) {
                 return object;
             }
@@ -40,10 +40,9 @@ class Project {
     }
     findIndex(todo) {
         const index = this.todos.findIndex(todo);
-        return index
+        return index;
     }
-    removeTodo(todo) {
-        const index = this.todos.findIndex(todo);
+    removeTodo(index) {
         this.todos = this.todos.slice(0,index).concat(this.todos.slice(index+1));
     }
 }

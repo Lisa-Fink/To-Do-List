@@ -1,4 +1,5 @@
 import { Todo } from "./classes";
+import { sideRender } from "./side";
 
 let thisProject = null
 
@@ -8,13 +9,17 @@ const todoCreate = (() => {
         heading.innerText = thisProject.name
         return heading
     }
+    const editHeading = () => {
+        const heading = document.createElement('h3')
+        heading.innerText = 'Edit Task'
+        return heading
+    }
     
     const todoList = () => {
         const ul = document.createElement('ul')
-        
+        let i = 1 
         if (thisProject.todos) {
             for (let task of thisProject.todos) {
-                let i = 1 
                 let li = document.createElement('li');
                 li.id = i;
                 li.data = task;
@@ -50,13 +55,13 @@ const todoCreate = (() => {
         remove.addEventListener('click', projectControl.removeTodo)
         edit.addEventListener('click', projectControl.editTodo)
 
-
         changeDiv.appendChild(remove);
         changeDiv.appendChild(edit);
         return changeDiv;
     }
     
-    const todoForm = (titleVal='', detailVal='', dateVal='') => {
+    const todoForm = () => {
+
         const todoForm = document.createElement('form');
         todoForm.id = 'to-do-form';
         todoForm.autocomplete = 'off';
@@ -65,20 +70,17 @@ const todoCreate = (() => {
         titleLabel.innerText = 'Title: ';
         const titleInput = document.createElement('input');
         titleInput.classList.add('todo-input');
-        titleInput.value = titleVal;
     
         const detailLabel = document.createElement('label');
         detailLabel.innerText = 'Details(optional): ';
         const detailInput = document.createElement('input');
         detailInput.classList.add('todo-input');
-        detailInput.value = detailVal;
     
         const dateLabel = document.createElement('label');
         dateLabel.innerText = 'Date: ';
         const dateInput = document.createElement('input');
         dateInput.type = 'date';
         dateInput.classList.add('todo-input');
-        dateInput.value = dateVal
 
         todoForm.appendChild(titleLabel);
         todoForm.appendChild(titleInput);
@@ -97,6 +99,7 @@ const todoCreate = (() => {
 
         todoForm.appendChild(addButton)
         todoForm.appendChild(cancelButton)
+
         return todoForm
     }
     
@@ -106,7 +109,54 @@ const todoCreate = (() => {
         addTodo.addEventListener('click', projectRender.showTodoForm)
         return addTodo
     }
-    return {addTodoBtn, todoForm, todoList, heading}
+
+    const editForm = (selectedTodo) => {
+        const todoForm = document.createElement('form');
+        todoForm.data = selectedTodo
+        todoForm.id = 'edit-to-do-form';
+        todoForm.autocomplete = 'off';
+    
+        const titleLabel = document.createElement('label');
+        titleLabel.innerText = 'Title: ';
+        const titleInput = document.createElement('input');
+        titleInput.classList.add('todo-input');
+        titleInput.value = selectedTodo.name
+    
+        const detailLabel = document.createElement('label');
+        detailLabel.innerText = 'Details(optional): ';
+        const detailInput = document.createElement('input');
+        detailInput.classList.add('todo-input');
+        detailInput.value = selectedTodo.description
+    
+        const dateLabel = document.createElement('label');
+        dateLabel.innerText = 'Date: ';
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.classList.add('todo-input');
+        dateInput.value = selectedTodo.date
+
+        todoForm.appendChild(editHeading())
+        todoForm.appendChild(titleLabel);
+        todoForm.appendChild(titleInput);
+        todoForm.appendChild(detailLabel);
+        todoForm.appendChild(detailInput);
+        todoForm.appendChild(dateLabel);
+        todoForm.appendChild(dateInput);
+
+        const addButton = document.createElement('button')
+        addButton.innerText = ' Edit Task '
+        addButton.addEventListener('click', projectControl.makeTodoEdit)
+
+        const cancelButton = document.createElement('button')
+        cancelButton.innerText = ' Cancel '
+        cancelButton.addEventListener('click', projectControl.cancelEditTodoForm)
+
+        todoForm.appendChild(addButton)
+        todoForm.appendChild(cancelButton)
+
+        return todoForm
+    }
+    return {addTodoBtn, todoForm, todoList, heading, editForm}
 })()
 
 
@@ -141,7 +191,12 @@ const projectRender = (() => {
         const inputs = document.querySelectorAll('.todo-input')
         inputs.forEach(input => input.value = '')
     }
-    return {projectPage, showTodoForm, hideTodoForm, update, clearTodoForm}
+    const changeLiToForm = (selectedTodo, selectedLi) => {
+        selectedLi.innerHTML = ''
+        selectedLi.appendChild(todoCreate.editForm(selectedTodo))
+    }
+    return {projectPage, showTodoForm, hideTodoForm, update, clearTodoForm,
+        changeLiToForm}
 })()
 
 const projectControl = (() => {
@@ -173,8 +228,8 @@ const projectControl = (() => {
         let newTodo = new Todo(name, description , date);
         return newTodo  
     }
-    const removeTodo = (todo) => {
-        let index = thisProject.findIndex(todo)
+    const removeTodo = (e) => {
+        let index = e.target.parentElement.data - 1
         thisProject.removeTodo(index)
         projectRender.update()
     }
@@ -184,29 +239,31 @@ const projectControl = (() => {
         projectRender.clearTodoForm()
     }
     const editTodo = (e) => {
-        let li = findSelectedLi(e)
-        let selectedTodo = li.data
-        let values = getTaskValues(selectedTodo)
-        console.log(values)
-        changeLiToForm(values, li)
+        let selLi = findSelectedLi(e)
+        let selectedTodo = selLi.data
+        projectRender.changeLiToForm(selectedTodo, selLi)
     }
     const findSelectedLi = (e) => {
         let id = e.target.parentElement.data
         let selectedLi = document.getElementById(id)
         return selectedLi
     }
-    const getTaskValues = (todo) => {
-        let name = todo.name;
-        let description = todo.description;
-        let date = todo.date;
-        return [name, description, date]
+    const cancelEditTodoForm = (e) => {
+        e.preventDefault()
+        projectRender.projectPage()
     }
-    const changeLiToForm = (values, li) => {
-        li.innerHTML = ''
-        li.appendChild(todoCreate.todoForm(values[0], values[1])) 
+    const makeTodoEdit = (e) => {
+        e.preventDefault()
+        const selectedTodo = e.target.parentElement.data
+        let values = getTodoInfo(e)
+        selectedTodo.name = values[0]
+        selectedTodo.description = values[1]
+        selectedTodo.date = values[2]
+        projectRender.projectPage()
     }
     
-    return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo};
+    return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo, 
+            cancelEditTodoForm, makeTodoEdit, removeTodo};
 
 })()
 
