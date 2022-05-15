@@ -39,17 +39,24 @@ const todoCreate = (() => {
                 let taskChangeDiv = changerDiv(project, task);
                 taskChangeDiv.data = i;
 
+                topDiv.appendChild(checkBox(task))
                 topDiv.appendChild(nameDiv);
                 topDiv.appendChild(dateDiv);
                 topDiv.appendChild(taskChangeDiv);
                 topDiv.classList.add('task-list');
                 li.appendChild(topDiv);
+                let description = document.createElement('div');
                 if (task.description) {
-                    let description = document.createElement('div');
+                    description = document.createElement('div');
                     description.classList.add('description');
                     description.innerText = task.description;
                     li.appendChild(description);
                 }
+                task.complete ? 
+                    (nameDiv.className = 'complete',
+                        description.classList.add('complete')) :
+                    (nameDiv.className = '',
+                        description.className = 'description');
                 i ++;
                 ul.appendChild(li);
             }
@@ -62,6 +69,13 @@ const todoCreate = (() => {
         return ul
     }
     
+    const checkBox = (task) => {
+        const checkBox = task.complete ? makeIcon('check_box') :
+            makeIcon('check_box_outline_blank');
+        checkBox.addEventListener('click', projectControl.changeStatus);
+        checkBox.data = task;
+        return checkBox;
+    }
 
     const changerDiv = (project, task) => {
         let changeDiv = document.createElement('div');
@@ -306,9 +320,15 @@ const projectControl = (() => {
                 e.target.innerText = 'star',
                 todo.important = true);
     }
+    const changeStatus = (e) => {
+        console.log(e)
+        const todo = e.target.data;
+        todo.complete ? todo.complete = false: todo.complete = true;
+        projectRender.update();
+    }
     
     return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo, 
-            cancelEditTodoForm, makeTodoEdit, removeTodo, starClick};
+            cancelEditTodoForm, makeTodoEdit, removeTodo, starClick, changeStatus};
 
 })()
 
