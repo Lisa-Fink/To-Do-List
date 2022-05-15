@@ -1,59 +1,75 @@
 import { Todo } from "./classes";
 import { sideRender } from "./side";
-import {makeIcon} from "./allProjects";
+import { makeIcon } from "./allProjects";
+import taskControl from "./sideHome";
 
 let thisProject = null
 
 const todoCreate = (() => {
     const heading = () => {
-        const heading = document.createElement('h2')
-        heading.innerText = thisProject.name
-        return heading
+        const heading = document.createElement('h2');
+        heading.innerText = thisProject.name;
+        return heading;
     }
     const editHeading = () => {
-        const heading = document.createElement('h3')
-        heading.innerText = 'Edit Task'
-        return heading
+        const heading = document.createElement('h3');
+        heading.innerText = 'Edit Task';
+        return heading;
     }
-    
-    const todoList = () => {
-        const ul = document.createElement('ul')
-        ul.classList.add('task-ul')
-        let i = 1 
-        if (thisProject.todos) {
-            for (let task of thisProject.todos) {
+    const list = (project) => {
+        const ul = document.getElementById('to-do-list-ul')
+        if (project.todos) {
+            let i = 1;
+            for (let task of project.todos) {
                 let li = document.createElement('li');
                 li.id = i;
                 li.data = task;
                 let topDiv = document.createElement('div');
                 let nameDiv = document.createElement('div');
                 nameDiv.innerText = task.name;
-                let taskChangeDiv = changerDiv();
-                taskChangeDiv.data = i
+
+                let dateDiv = document.createElement('div');
+                if (task.date) {
+                    dateDiv.innerText = `Due: ${task.date}`;
+                } else {
+                    dateDiv.innerText = 'No Due Date';
+                }
+                
+                let taskChangeDiv = changerDiv(project);
+                taskChangeDiv.data = i;
+
                 topDiv.appendChild(nameDiv);
+                topDiv.appendChild(dateDiv);
                 topDiv.appendChild(taskChangeDiv);
                 topDiv.classList.add('task-list');
                 li.appendChild(topDiv);
                 if (task.description) {
                     let description = document.createElement('div');
-                    description.classList.add('description')
+                    description.classList.add('description');
                     description.innerText = task.description;
-                    li.appendChild(description)
+                    li.appendChild(description);
                 }
-                i ++
+                i ++;
                 ul.appendChild(li);
             }
         }
+    }
+    const todoList = () => {
+        const ul = document.createElement('ul');
+        ul.classList.add('task-ul');
+        ul.id = 'to-do-list-ul';
         return ul
     }
+    
 
-    const changerDiv = () => {
+    const changerDiv = (project) => {
         let changeDiv = document.createElement('div');
-        let edit = makeIcon('edit')
-        let remove = makeIcon('delete_forever')
+        let edit = makeIcon('edit');
+        let remove = makeIcon('delete_forever');
+        remove.data = project
 
-        remove.addEventListener('click', projectControl.removeTodo)
-        edit.addEventListener('click', projectControl.editTodo)
+        remove.addEventListener('click', projectControl.removeTodo);
+        edit.addEventListener('click', projectControl.editTodo);
 
         changeDiv.appendChild(edit);
         changeDiv.appendChild(remove);
@@ -155,7 +171,7 @@ const todoCreate = (() => {
 
         return todoForm
     }
-    return {addTodoBtn, todoForm, todoList, heading, editForm}
+    return {addTodoBtn, todoForm, todoList, heading, editForm, list}
 })()
 
 
@@ -165,8 +181,10 @@ const projectRender = (() => {
 
     const projectPage = () => {
         contentDiv.innerHTML = ''
+        contentDiv.data = 'project-page'
         contentDiv.appendChild(todoCreate.heading())
         contentDiv.appendChild(todoCreate.todoList())
+        todoCreate.list(thisProject);
         contentDiv.appendChild(todoCreate.todoForm())
         contentDiv.appendChild(todoCreate.addTodoBtn())
     }
@@ -183,7 +201,9 @@ const projectRender = (() => {
     }
 
     const update = () => {
-        projectPage(thisProject)
+        contentDiv.data == 'project-page' ? projectPage(thisProject) :
+            contentDiv.data == 'all-tasks' ? taskControl.makeTasksPage('all') :
+            null
     }
 
     const clearTodoForm = () => {
@@ -215,6 +235,7 @@ const projectControl = (() => {
         thisProject.addTodo(newTodo)
         projectRender.showTodoForm()
         projectRender.update()
+        console.log(newTodo)
     }
 
     const getTodoInfo = (e) => {
@@ -230,7 +251,8 @@ const projectControl = (() => {
     }
     const removeTodo = (e) => {
         let index = e.target.parentElement.data - 1
-        thisProject.removeTodo(index)
+        const project = e.target.data
+        project.removeTodo(index)
         projectRender.update()
     }
     const cancelTodoForm = (e) => {
@@ -250,7 +272,7 @@ const projectControl = (() => {
     }
     const cancelEditTodoForm = (e) => {
         e.preventDefault()
-        projectRender.projectPage()
+        projectRender.update()
     }
     const makeTodoEdit = (e) => {
         e.preventDefault()
@@ -259,7 +281,7 @@ const projectControl = (() => {
         selectedTodo.name = values[0]
         selectedTodo.description = values[1]
         selectedTodo.date = values[2]
-        projectRender.projectPage()
+        projectRender.update()
     }
     
     return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo, 
@@ -267,4 +289,4 @@ const projectControl = (() => {
 
 })()
 
-export default projectControl
+export {projectControl, todoCreate};

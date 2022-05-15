@@ -1,29 +1,21 @@
 import { todoLists } from "./classes";
 import {allProjControl} from "./allProjects";
+import { todoCreate } from "./projectPage";
 
 const taskControl = (() => {
-    const makeTasksPage = (taskViewType) => {
-        const taskArray = getTasks(taskViewType);
-        taskViewType != 'projects' ? render.tasksPage(taskArray): null;
-    }
-    
-    
-    const getTasks = (type) => {
-        const taskArr = []
+    const makeTasksPage = (type) => {
+        render.tasksPage();
+        //insert the correct content in the ul
         if (type == 'all') {
             for (let proj of todoLists.projects) {
-                for (let task of proj.todos) {
-                    taskArr.push(task);
+                todoCreate.list(proj)
                 }
+            } else if (type == 'projects') {
+                allProjControl.makePage()
             }
-            return taskArr;
-        } else if (type == 'projects') {
-            allProjControl.makePage()
         }
-    }
-    
 
-    return {makeTasksPage, getTasks};
+    return {makeTasksPage};
 })()
 
 
@@ -33,35 +25,23 @@ const create = (() => {
     head.innerText = 'All Tasks';
     return head;
     }
-    const taskList = (tasks) => {
+    const ul = () => {
         const ul = document.createElement('ul');
-        ul.classList.add('task-ul')
-        
-        if (tasks) {
-            for (let task of tasks) {
-                let li = document.createElement('li')
-                li.innerText = task.name
-                if (task.description) {
-                    let description = document.createElement('div');
-                    description.classList.add('description')
-                    description.innerText = task.description;
-                    li.appendChild(description)
-                }
-                ul.appendChild(li);      
-            }
-        }
+        ul.classList.add('task-ul');
+        ul.id = 'to-do-list-ul';
         return ul;
     }
     
-    return {heading, taskList};
+    return {heading, ul};
 })()
 
 const render = (() => {
+    const contentDiv = document.getElementById('main-content');
     const tasksPage = (tasks) => {
-        const contentDiv = document.getElementById('main-content');
+        contentDiv.data = 'all-tasks'
         contentDiv.innerHTML = ''
         contentDiv.appendChild(create.heading());
-        contentDiv.appendChild(create.taskList(tasks));
+        contentDiv.appendChild(create.ul());
     }
     return {tasksPage};
 })()
