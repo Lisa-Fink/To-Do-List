@@ -7,8 +7,11 @@ const sideFunc = (() => {
         let newProject = new Project(name);
         return newProject;
     }
-    const getInputName = () => {
-        const input = document.getElementById('project-name-input');
+    const getInputName = (e) => {
+        //checks if new project is added with side nav or on all projects page
+        const input = e.target.id == 'add-button' ? 
+            document.getElementById('project-name-input'):
+            document.getElementById('all-proj-name-input');
         return input.value;
     }
     const getProject = (e) => {
@@ -22,8 +25,8 @@ const sideFunc = (() => {
 })()
 
 const sideControl = (() => {
-    const makeNewProject = () => {
-        const name = sideFunc.getInputName();
+    const makeNewProject = (e) => {
+        const name = sideFunc.getInputName(e);
         let newProject = sideFunc.createProject(name);
         todoLists.addProject(newProject);
         sideRender.hideProjectInput();
@@ -53,12 +56,13 @@ const sideControl = (() => {
 })()
 
 const sideRender = (() => {
+    let contentDiv = document.getElementById('main-content');
     let projectUl = document.getElementById('projects');
     const input = document.getElementById('project-name-input');
     const update = () => {
         clear();
         sidebar();
-        allProjRender.update();
+        contentDiv.data == 'all-projects' ? allProjRender.update(): null;
     }
 
     const sidebar = () => {

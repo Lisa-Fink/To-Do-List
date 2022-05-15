@@ -1,7 +1,7 @@
 import { todoLists } from "./classes";
 import projectControl from "./projectPage";
 import { contentController} from ".";
-import { sideRender } from "./side";
+import { sideRender, sideControl } from "./side";
 
 const makeIcon = (name) => {
     const span = document.createElement('span');
@@ -46,8 +46,13 @@ const allProjControl = (() => {
     const cancelEdit = () => {
         allProjRender.update();
     }
+    const cancelForm = () => {
+        const input = document.getElementById('all-proj-name-input');
+        input.value = '';
+        cancelEdit();
+    }
 
-    return {makePage, viewProject, projFunctions, makeEdit, cancelEdit};
+    return {makePage, viewProject, projFunctions, makeEdit, cancelEdit, cancelForm};
 })()
 
 const allProjCreate = (() => {
@@ -95,15 +100,15 @@ const allProjCreate = (() => {
 
         const projLink = document.createElement('div');
         const view = makeIcon('open_in_new');
-        view.data = 'view'
-        const rename = makeIcon('edit')
-        rename.data = 'rename'
-        const del = makeIcon('delete_forever')
-        del.data = 'delete'
+        view.data = 'view';
+        const rename = makeIcon('edit');
+        rename.data = 'rename';
+        const del = makeIcon('delete_forever');
+        del.data = 'delete';
         
-        projLink.appendChild(view)
-        projLink.appendChild(rename)
-        projLink.appendChild(del)
+        projLink.appendChild(view);
+        projLink.appendChild(rename);
+        projLink.appendChild(del);
         projLink.addEventListener('click', allProjControl.projFunctions);
 
         li.appendChild(projHead);
@@ -111,7 +116,33 @@ const allProjCreate = (() => {
         li.appendChild(projLink);
         return li;
     }
-    return {projList, heading, inputForm};
+    const addProject = () => {
+        const addProject = document.createElement('div');
+        addProject.innerText = 'Add Project ';
+        addProject.appendChild(makeIcon('add_circle'));
+        addProject.addEventListener('click', allProjRender.showForm);
+        return addProject;
+    }
+    const addProjectForm = () => {
+        const addDiv = document.createElement('div');
+        addDiv.id = 'add-project-form'
+        const input = document.createElement('input');
+        input.id = 'all-proj-name-input';
+        input.placeholder = 'Enter Project Name';
+
+        const buttons = document.createElement('div');
+        const check = makeIcon('check_circle');
+        const cancel = makeIcon('cancel');
+        check.addEventListener('click', sideControl.makeNewProject);
+        cancel.addEventListener('click', allProjControl.cancelForm);
+        buttons.appendChild(check);
+        buttons.appendChild(cancel);
+
+        addDiv.appendChild(input);
+        addDiv.appendChild(buttons);
+        return addDiv;
+    }
+    return {projList, heading, inputForm, addProject, addProjectForm};
 })()
 
 const allProjRender = (() => {
@@ -121,14 +152,21 @@ const allProjRender = (() => {
     }
     const page = () => {
         const contentDiv = document.getElementById('main-content');
+        contentDiv.data = 'all-projects'
         contentDiv.innerHTML = '';
         contentDiv.appendChild(allProjCreate.heading());
+        contentDiv.appendChild(allProjCreate.addProjectForm());
+        contentDiv.appendChild(allProjCreate.addProject());
         contentDiv.appendChild(allProjCreate.projList());
     }
     const update = () => {
         page()
     }
-    return {page, update, changeToInput};
+    const showForm = () => {
+        const form = document.getElementById('add-project-form');
+        form.style.display = 'block'
+    }
+    return {page, update, changeToInput, showForm};
 })()
 
 export {allProjControl, allProjRender, makeIcon};

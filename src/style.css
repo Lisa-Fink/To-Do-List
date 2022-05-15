@@ -89,3 +89,7 @@ body {
 .material-symbols-outlined:hover {
     color: darkblue;
 }
+
+#add-project-form {
+    display: none;
+}
