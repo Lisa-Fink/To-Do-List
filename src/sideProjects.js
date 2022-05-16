@@ -12,7 +12,8 @@ const sideFunc = (() => {
         const input = e.target.id == 'add-button' ? 
             document.getElementById('project-name-input'):
             document.getElementById('all-proj-name-input');
-        return input.value;
+        const name = input.value == '' ? 'unnamed project' : input.value;
+        return name;
     }
     const getProject = (e) => {
         return e.target.data;
