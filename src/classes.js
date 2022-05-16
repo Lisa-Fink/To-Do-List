@@ -45,11 +45,11 @@ class Project {
 }
 
 class Todo {
-    constructor(name, description, date) {
+    constructor(name, description, date, important) {
         this.name = name;
         this.description = description;
         this.date = date;
-        this.important = false;
+        this.important = important;
     }
 }
 // add project for testing

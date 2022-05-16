@@ -2,9 +2,9 @@ import { Todo } from "./classes";
 import { sideRender } from "./sideProjects";
 import { makeIcon } from "./allProjects";
 import taskControl from "./sideHome";
-import { formatDistanceToNowStrict, parseISO} from 'date-fns';
+import { formatDistanceToNowStrict, parseISO } from 'date-fns';
 
-let thisProject = null
+let thisProject = null;
 
 const todoCreate = (() => {
     const heading = () => {
@@ -18,10 +18,10 @@ const todoCreate = (() => {
         return heading;
     }
     const filters = (project, filter) => {
-        let filteredTodos = project.todos
+        let filteredTodos = project.todos;
         if (filter) {
             if (filter == 'important') {
-                filteredTodos = project.todos.filter(todo => todo.important)
+                filteredTodos = project.todos.filter(todo => todo.important);
             } else if (filter == 'today') {
                 let today = new Date();
                 const dd = String(today.getDate()).padStart(2, '0');
@@ -31,13 +31,17 @@ const todoCreate = (() => {
                 filteredTodos = project.todos.filter(todo => todo.date == formatToday);
                 } else {
                     filteredTodos = project.todos.
-                        filter(todo => formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0] <= 7);
+                        filter(todo => {
+                           return  (todo.date && 
+                            formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0] <= 7) ?
+                                todo : null;
+                        });
                 }
             }
-        return filteredTodos    
+        return filteredTodos;
     }
     const list = (project, filter=null) => {
-        const ul = document.getElementById('to-do-list-ul')
+        const ul = document.getElementById('to-do-list-ul');
         if (project.todos) {
             let i = 1;
             let filteredTodos = filters(project, filter);
@@ -60,7 +64,7 @@ const todoCreate = (() => {
                 let taskChangeDiv = changerDiv(project, task);
                 taskChangeDiv.data = i;
 
-                topDiv.appendChild(checkBox(task))
+                topDiv.appendChild(checkBox(task));
                 topDiv.appendChild(nameDiv);
                 topDiv.appendChild(dateDiv);
                 topDiv.appendChild(taskChangeDiv);
@@ -97,21 +101,26 @@ const todoCreate = (() => {
         checkBox.data = task;
         return checkBox;
     }
-
-    const changerDiv = (project, task) => {
-        let changeDiv = document.createElement('div');
-        
-        let star = null
-        if (task.important) {
+    const starIcon = (task) => {
+        let star = null;
+        if (task && task.important) {
             star = makeIcon('star');
             star.classList.add('important');
         } else {
             star = makeIcon('grade');
         }
         star.data = task;
+        return star;
+    }
+
+    const changerDiv = (project, task) => {
+        let changeDiv = document.createElement('div');
+       
         let edit = makeIcon('edit');
         let remove = makeIcon('delete_forever');
         remove.data = project;
+        let star = starIcon(task);
+        
 
         star.addEventListener('click', projectControl.starClick);
         remove.addEventListener('click', projectControl.removeTodo);
@@ -123,7 +132,7 @@ const todoCreate = (() => {
         return changeDiv;
     }
     
-    const todoForm = () => {
+    const todoForm = (editing=false, selectedTodo=null) => {
 
         const todoForm = document.createElement('form');
         todoForm.id = 'to-do-form';
@@ -145,106 +154,81 @@ const todoCreate = (() => {
         dateInput.type = 'date';
         dateInput.classList.add('todo-input');
 
+        const starLabel = document.createElement('label');
+        starLabel.appendChild(starIcon(selectedTodo));
+        const starInput = document.createElement('input');
+        starInput.type = 'hidden'
+        starLabel.addEventListener('click', projectControl.starForm);
+
+        const addButton = makeIcon('check_circle');
+        const cancelButton = makeIcon('cancel');
+        
+        if (editing) {
+            
+            todoForm.data = selectedTodo;
+            todoForm.id = 'edit-to-do-form';
+            titleInput.value = selectedTodo.name;
+            detailInput.value = selectedTodo.description ? 
+                selectedTodo.description : '';
+            dateInput.value = selectedTodo.date;
+            todoForm.appendChild(editHeading());
+            addButton.addEventListener('click', projectControl.makeTodoEdit);
+            cancelButton.addEventListener('click', projectControl.cancelEditTodoForm);
+        } else {
+            todoForm.id = 'to-do-form';
+            addButton.addEventListener('click', projectControl.makeNewTodo);
+            cancelButton.addEventListener('click', projectControl.cancelTodoForm);
+        }
+
         todoForm.appendChild(titleLabel);
         todoForm.appendChild(titleInput);
         todoForm.appendChild(detailLabel);
         todoForm.appendChild(detailInput);
         todoForm.appendChild(dateLabel);
         todoForm.appendChild(dateInput);
+        todoForm.appendChild(starLabel);
+        todoForm.appendChild(starInput);
+        todoForm.appendChild(addButton);
+        todoForm.appendChild(cancelButton);
 
-        const addButton = makeIcon('check_circle')
-        
-        addButton.addEventListener('click', projectControl.makeNewTodo)
-
-        const cancelButton = makeIcon('cancel')
-        cancelButton.addEventListener('click', projectControl.cancelTodoForm)
-
-        todoForm.appendChild(addButton)
-        todoForm.appendChild(cancelButton)
-
-        return todoForm
+        return todoForm;
     }
     
     const addTodoBtn = () => {
-        const addTodo = document.createElement('div')
-        addTodo.innerText = 'Add Task '
-        addTodo.appendChild(makeIcon('add_circle'))
-        addTodo.addEventListener('click', projectRender.showTodoForm)
-        return addTodo
+        const addTodo = document.createElement('div');
+        addTodo.innerText = 'Add Task ';
+        addTodo.appendChild(makeIcon('add_circle'));
+        addTodo.addEventListener('click', projectRender.showTodoForm);
+        return addTodo;
     }
 
-    const editForm = (selectedTodo) => {
-        const todoForm = document.createElement('form');
-        todoForm.data = selectedTodo
-        todoForm.id = 'edit-to-do-form';
-        todoForm.autocomplete = 'off';
-    
-        const titleLabel = document.createElement('label');
-        titleLabel.innerText = 'Title: ';
-        const titleInput = document.createElement('input');
-        titleInput.classList.add('todo-input');
-        titleInput.value = selectedTodo.name
-    
-        const detailLabel = document.createElement('label');
-        detailLabel.innerText = 'Details(optional): ';
-        const detailInput = document.createElement('input');
-        detailInput.classList.add('todo-input');
-        detailInput.value = selectedTodo.description ? 
-            selectedTodo.description : ''
-    
-        const dateLabel = document.createElement('label');
-        dateLabel.innerText = 'Date: ';
-        const dateInput = document.createElement('input');
-        dateInput.type = 'date';
-        dateInput.classList.add('todo-input');
-        dateInput.value = selectedTodo.date
-
-        todoForm.appendChild(editHeading())
-        todoForm.appendChild(titleLabel);
-        todoForm.appendChild(titleInput);
-        todoForm.appendChild(detailLabel);
-        todoForm.appendChild(detailInput);
-        todoForm.appendChild(dateLabel);
-        todoForm.appendChild(dateInput);
-
-        const addButton = makeIcon('check_circle')
-        addButton.addEventListener('click', projectControl.makeTodoEdit)
-
-        const cancelButton = makeIcon('cancel')
-        cancelButton.addEventListener('click', projectControl.cancelEditTodoForm)
-
-        todoForm.appendChild(addButton)
-        todoForm.appendChild(cancelButton)
-
-        return todoForm
-    }
-    return {addTodoBtn, todoForm, todoList, heading, editForm, list}
+    return {addTodoBtn, todoForm, todoList, heading, list};
 })()
 
 
 
 const projectRender = (() => {
-    const contentDiv = document.getElementById('main-content')
+    const contentDiv = document.getElementById('main-content');
 
     const projectPage = () => {
-        contentDiv.innerHTML = ''
-        contentDiv.data = 'project-page'
-        contentDiv.appendChild(todoCreate.heading())
-        contentDiv.appendChild(todoCreate.todoList())
+        contentDiv.innerHTML = '';
+        contentDiv.data = 'project-page';
+        contentDiv.appendChild(todoCreate.heading());
+        contentDiv.appendChild(todoCreate.todoList());
         todoCreate.list(thisProject);
-        contentDiv.appendChild(todoCreate.todoForm())
-        contentDiv.appendChild(todoCreate.addTodoBtn())
+        contentDiv.appendChild(todoCreate.todoForm());
+        contentDiv.appendChild(todoCreate.addTodoBtn());
     }
 
     const showTodoForm = () => {
-        const todoForm = document.getElementById('to-do-form')
+        const todoForm = document.getElementById('to-do-form');
         todoForm.style.display != 'block' ? 
-            todoForm.style.display = 'block': null
+            todoForm.style.display = 'block': null;
     }
     const hideTodoForm = () => {
-        const todoForm = document.getElementById('to-do-form')
+        const todoForm = document.getElementById('to-do-form');
         todoForm.style.display == 'block' ? 
-            (todoForm.style.display = 'none', clearTodoForm): null
+            (todoForm.style.display = 'none', clearTodoForm): null;
     }
 
     const update = () => {
@@ -256,80 +240,85 @@ const projectRender = (() => {
         }
 
     const clearTodoForm = () => {
-        const inputs = document.querySelectorAll('.todo-input')
+        const inputs = document.querySelectorAll('.todo-input');
         inputs.forEach(input => input.value = '')
-    }
+    };
     const changeLiToForm = (selectedTodo, selectedLi) => {
         selectedLi.innerHTML = ''
-        selectedLi.appendChild(todoCreate.editForm(selectedTodo))
+        selectedLi.appendChild(todoCreate.todoForm(true, selectedTodo));
     }
     return {projectPage, showTodoForm, hideTodoForm, update, clearTodoForm,
-        changeLiToForm}
+        changeLiToForm};
 })()
 
 const projectControl = (() => {
     const makePage = (project) => {
-        setProject(project)
-        projectRender.projectPage()
+        setProject(project);
+        projectRender.projectPage();
     }
 
     const setProject = (project) => {
-        thisProject = project
+        thisProject = project;
     }
 
     const makeNewTodo = (e) => {
-        e.preventDefault()
-        let todoInfo = getTodoInfo(e)
-        let newTodo = createTodo(todoInfo[0], todoInfo[1], todoInfo[2]);
-        thisProject.addTodo(newTodo)
-        projectRender.showTodoForm()
-        projectRender.update()
+        e.preventDefault();
+        let todoInfo = getTodoInfo(e);
+        let newTodo = createTodo(todoInfo[0], todoInfo[1], todoInfo[2], todoInfo[3]);
+        thisProject.addTodo(newTodo);
+        projectRender.showTodoForm();
+        projectRender.update();
     }
 
     const getTodoInfo = (e) => {
-        e.preventDefault()
-        const name = e.target.parentElement[0].value
-        const details = e.target.parentElement[1].value
-        const date = e.target.parentElement[2].value
-        return [name, details, date]
+        e.preventDefault();
+        const name = e.target.parentElement[0].value;
+        const details = e.target.parentElement[1].value;
+        const date = e.target.parentElement[2].value;
+        const important = (e.target.parentElement[3].previousSibling.
+                childNodes[0].classList.contains('important')) ? true : false;
+        return [name, details, date, important];
     }
-    const createTodo = (name, description, date) => {
-        let newTodo = new Todo(name, description , date);
-        return newTodo  
+    const createTodo = (name, description, date, important) => {
+        name == '' ? name = 'unnamed task' : null;
+        let newTodo = new Todo(name, description, date, important);
+        return newTodo;
     }
     const removeTodo = (e) => {
-        let index = e.target.parentElement.data - 1
-        const project = e.target.data
-        project.removeTodo(index)
-        projectRender.update()
+        let index = e.target.parentElement.data - 1;
+        const project = e.target.data;
+        project.removeTodo(index);
+        projectRender.update();
     }
     const cancelTodoForm = (e) => {
-        e.preventDefault()
-        projectRender.hideTodoForm()
-        projectRender.clearTodoForm()
+        e.preventDefault();
+        projectRender.hideTodoForm();
+        projectRender.clearTodoForm();
     }
     const editTodo = (e) => {
-        let selLi = findSelectedLi(e)
-        let selectedTodo = selLi.data
-        projectRender.changeLiToForm(selectedTodo, selLi)
+        let selLi = findSelectedLi(e);
+        let selectedTodo = selLi.data;
+        projectRender.changeLiToForm(selectedTodo, selLi);
     }
     const findSelectedLi = (e) => {
-        let id = e.target.parentElement.data
-        let selectedLi = document.getElementById(id)
-        return selectedLi
+        let id = e.target.parentElement.data;
+        let selectedLi = document.getElementById(id);
+        return selectedLi;
     }
     const cancelEditTodoForm = (e) => {
-        e.preventDefault()
-        projectRender.update()
+        e.preventDefault();
+        projectRender.update();
     }
     const makeTodoEdit = (e) => {
-        e.preventDefault()
-        const selectedTodo = e.target.parentElement.data
-        let values = getTodoInfo(e)
-        selectedTodo.name = values[0]
-        selectedTodo.description = values[1]
-        selectedTodo.date = values[2]
-        projectRender.update()
+        e.preventDefault();
+        console.log(e)
+        const selectedTodo = e.target.parentElement.data;
+        let values = getTodoInfo(e);
+        selectedTodo.name = values[0];
+        selectedTodo.description = values[1];
+        selectedTodo.date = values[2];
+        selectedTodo.important = values[3];
+        projectRender.update();
     }
     const starClick = (e) => {
         const todo = e.target.data;
@@ -340,16 +329,23 @@ const projectControl = (() => {
             (e.target.classList.add('important'),
                 e.target.innerText = 'star',
                 todo.important = true);
-        projectRender.update()
+        projectRender.update();
     }
     const changeStatus = (e) => {
         const todo = e.target.data;
         todo.complete ? todo.complete = false: todo.complete = true;
         projectRender.update();
     }
+    const starForm = (e) => {
+        (e.target.classList.contains('important')) ?
+            (e.target.classList.remove('important'),
+            e.target.innerText = 'grade') :
+            (e.target.classList.add('important'),
+            e.target.innerText = 'star')
+    }
     
     return {makeNewTodo, setProject, makePage, cancelTodoForm, editTodo, 
-            cancelEditTodoForm, makeTodoEdit, removeTodo, starClick, changeStatus};
+            cancelEditTodoForm, makeTodoEdit, removeTodo, starClick, changeStatus, starForm};
 
 })()
 
