@@ -2,6 +2,7 @@ import { Todo } from "./classes";
 import { sideRender } from "./side";
 import { makeIcon } from "./allProjects";
 import taskControl from "./sideHome";
+import { formatDistanceToNowStrict, parseISO} from 'date-fns';
 
 let thisProject = null
 
@@ -16,11 +17,31 @@ const todoCreate = (() => {
         heading.innerText = 'Edit Task';
         return heading;
     }
-    const list = (project) => {
+    const filters = (project, filter) => {
+        let filteredTodos = project.todos
+        if (filter) {
+            if (filter == 'important') {
+                filteredTodos = project.todos.filter(todo => todo.important)
+            } else if (filter == 'today') {
+                let today = new Date();
+                const dd = String(today.getDate()).padStart(2, '0');
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                const yyyy = today.getFullYear();
+                const formatToday = yyyy + '-' + mm + '-' + dd;
+                filteredTodos = project.todos.filter(todo => todo.date == formatToday);
+                } else {
+                    filteredTodos = project.todos.
+                        filter(todo => formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0] <= 7);
+                }
+            }
+        return filteredTodos    
+    }
+    const list = (project, filter=null) => {
         const ul = document.getElementById('to-do-list-ul')
         if (project.todos) {
             let i = 1;
-            for (let task of project.todos) {
+            let filteredTodos = filters(project, filter);
+            for (let task of filteredTodos) {
                 let li = document.createElement('li');
                 li.id = i;
                 li.data = task;
@@ -229,8 +250,10 @@ const projectRender = (() => {
     const update = () => {
         contentDiv.data == 'project-page' ? projectPage(thisProject) :
             contentDiv.data == 'all-tasks' ? taskControl.makeTasksPage('all') :
-            null
-    }
+            contentDiv.data == 'important' ? taskControl.makeTasksPage('important') :
+            contentDiv.data == 'today' ? taskControl.makeTasksPage('today') :
+            contentDiv.data == 'week' ? taskControl.makeTasksPage('week') : null; 
+        }
 
     const clearTodoForm = () => {
         const inputs = document.querySelectorAll('.todo-input')
@@ -317,6 +340,7 @@ const projectControl = (() => {
             (e.target.classList.add('important'),
                 e.target.innerText = 'star',
                 todo.important = true);
+        projectRender.update()
     }
     const changeStatus = (e) => {
         const todo = e.target.data;

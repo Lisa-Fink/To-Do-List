@@ -110,5 +110,7 @@ const eventListeners = (() => {
 })();
 
 sideRender.update()
+// start with all projects page
+allProjRender.page();
 
 export {sideRender, sideControl, sideFunc};
