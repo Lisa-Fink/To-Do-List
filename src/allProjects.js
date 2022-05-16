@@ -1,7 +1,7 @@
 import { todoLists } from "./classes";
 import projectControl from "./projectPage";
 import { contentController} from ".";
-import { sideRender, sideControl } from "./side";
+import { sideRender, sideControl } from "./sideProjects";
 
 const makeIcon = (name) => {
     const span = document.createElement('span');

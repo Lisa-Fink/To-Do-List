@@ -1,5 +1,5 @@
 import { Todo } from "./classes";
-import { sideRender } from "./side";
+import { sideRender } from "./sideProjects";
 import { makeIcon } from "./allProjects";
 import taskControl from "./sideHome";
 import { formatDistanceToNowStrict, parseISO} from 'date-fns';

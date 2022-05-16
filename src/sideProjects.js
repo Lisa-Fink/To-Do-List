@@ -8,7 +8,7 @@ const sideFunc = (() => {
         return newProject;
     }
     const getInputName = (e) => {
-        //checks if new project is added with side nav or on all projects page
+        //checks if new project is added from side nav or projects page
         const input = e.target.id == 'add-button' ? 
             document.getElementById('project-name-input'):
             document.getElementById('all-proj-name-input');

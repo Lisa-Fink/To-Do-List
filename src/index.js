@@ -1,5 +1,5 @@
 import './style.css';
-import {sideRender, sideControl, sideFunc} from './side';
+import {sideRender, sideControl, sideFunc} from './sideProjects';
 import {ToDoList, Project, Todo, todoLists} from './classes';
 import {projectControl} from './projectPage';
 import taskControl from './sideHome';
