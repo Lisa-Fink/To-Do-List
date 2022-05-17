@@ -65,8 +65,10 @@ proj1.addTodo(todo2);
 proj1.addTodo(todo3);
 proj1.addTodo(todo4);
 todo1.date = '2022-06-21'
+todo1.important = true
 todo2.date = '2022-06-28'
 todo3.date = '2022-07-07'
+todo4.date = '2022-07-14'
 const todoLists = new ToDoList;
 todoLists.addProject(proj1);
 

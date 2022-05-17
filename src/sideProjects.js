@@ -83,11 +83,15 @@ const sideRender = (() => {
         input.value = '';
     }
     const showProjectInput = () => {
+        const addProjectDiv = document.getElementById('add-project');
+        addProjectDiv.style.display = 'none';
         const inputDiv = document.getElementById('add-project-input');
         inputDiv.style.display != 'block' ? inputDiv.style.display = 'block':
             null
     }
     const hideProjectInput = () => {
+        const addProjectDiv = document.getElementById('add-project');
+        addProjectDiv.style.display = 'block';
         const inputDiv = document.getElementById('add-project-input');
         inputDiv.style.display == 'block' ? inputDiv.style.display = 'none':
             null
