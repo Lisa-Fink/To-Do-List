@@ -40,7 +40,7 @@ const allProjControl = (() => {
     const makeEdit = (e) => {
         const projClicked = e.target.parentElement.parentElement.parentElement.parentElement.data;
         const newName = e.target.parentElement.parentElement[0].value;
-        projClicked.name = newName;
+        projClicked.name = newName == '' ? 'unnamed project' : newName;
         sideRender.update();
     }
     const cancelEdit = () => {
@@ -64,10 +64,11 @@ const allProjCreate = (() => {
     const inputForm = (project) => {
         const form = document.createElement('form');
         form.style.display = 'flex';
-        const nameInput = document.createElement('input');
+        const nameInput = document.createElement('textarea');
         nameInput.value = project.name;
 
         const buttonDiv = document.createElement('div');
+        buttonDiv.id = 'project-input-buttons'
 
         const check = makeIcon('check_circle');
         const cancel = makeIcon('cancel');
@@ -82,6 +83,7 @@ const allProjCreate = (() => {
     }
     const projList = () => {
         const projectUl = document.createElement('ul');
+        projectUl.id = 'all-proj-ul'
         todoLists.projects.forEach(project => {
             projectUl.appendChild(projCard(project));
         })
@@ -93,26 +95,31 @@ const allProjCreate = (() => {
         li.classList.add('proj-card');
 
         const projHead = document.createElement('h3');
-        projHead.innerText = project.name;
+        projHead.innerText = project.name.length < 26 ? project.name: 
+            `${project.name.slice(0,26)}...`;
 
         const projItems = document.createElement('p');
         projItems.innerText = `${project.todos.length} tasks`;
 
         const projLink = document.createElement('div');
+        projLink.id = 'proj-links';
         const view = makeIcon('open_in_new');
         view.data = 'view';
         const rename = makeIcon('edit');
         rename.data = 'rename';
         const del = makeIcon('delete_forever');
         del.data = 'delete';
+
+        const topDiv = document.createElement('div');
         
         projLink.appendChild(view);
         projLink.appendChild(rename);
         projLink.appendChild(del);
         projLink.addEventListener('click', allProjControl.projFunctions);
 
-        li.appendChild(projHead);
-        li.appendChild(projItems);
+        topDiv.appendChild(projHead);
+        topDiv.appendChild(projItems);
+        li.appendChild(topDiv);
         li.appendChild(projLink);
         return li;
     }
@@ -121,11 +128,16 @@ const allProjCreate = (() => {
         addProject.innerText = 'Add Project ';
         addProject.appendChild(makeIcon('add_circle'));
         addProject.addEventListener('click', allProjRender.showForm);
+        addProject.id = 'add-project-main'
         return addProject;
     }
     const addProjectForm = () => {
         const addDiv = document.createElement('div');
         addDiv.id = 'add-project-form'
+
+        const projFormHeading = document.createElement('h3');
+        projFormHeading.innerText = 'Create a New Project'
+
         const input = document.createElement('input');
         input.id = 'all-proj-name-input';
         input.placeholder = 'Enter Project Name';
@@ -138,6 +150,7 @@ const allProjCreate = (() => {
         buttons.appendChild(check);
         buttons.appendChild(cancel);
 
+        addDiv.appendChild(projFormHeading);
         addDiv.appendChild(input);
         addDiv.appendChild(buttons);
         return addDiv;
@@ -154,10 +167,13 @@ const allProjRender = (() => {
         const contentDiv = document.getElementById('main-content');
         contentDiv.data = 'all-projects'
         contentDiv.innerHTML = '';
-        contentDiv.appendChild(allProjCreate.heading());
-        contentDiv.appendChild(allProjCreate.addProjectForm());
-        contentDiv.appendChild(allProjCreate.addProject());
-        contentDiv.appendChild(allProjCreate.projList());
+        const allProjContainer = document.createElement('div');
+        allProjContainer.id = 'all-proj-container';
+        contentDiv.appendChild(allProjContainer);
+        allProjContainer.appendChild(allProjCreate.heading());
+        allProjContainer.appendChild(allProjCreate.addProjectForm());
+        allProjContainer.appendChild(allProjCreate.addProject());
+        allProjContainer.appendChild(allProjCreate.projList());
     }
     const update = () => {
         page()
