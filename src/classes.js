@@ -2,13 +2,13 @@ import { allProjRender } from "./allProjects";
 
 class ToDoList {
     constructor() {
-        this.projects = projects;
+        this.projects = [];
     }
     addProject(project) {
         this.projects.push(project);
     }
     findProject(name) {
-        let arr = this.projects
+        let arr = this.projects;
         for (let obj of arr) {
             if (obj.name == name) {
                 return obj;
@@ -25,7 +25,7 @@ class ToDoList {
     updateStorage() {
         localStorage.setItem('todoLists', JSON.stringify(this));
         const getTodoLists = localStorage.getItem('todoLists');
-        const parsedTodoLists = JSON.parse(getTodoLists)
+        const parsedTodoLists = JSON.parse(getTodoLists);
     }
 }
 
@@ -77,7 +77,7 @@ const setTodoLists = () => {
                 project.todos.forEach(todo => {
                     let newTodo = new Todo(todo.name, todo.description, 
                         todo.date, todo.important, todo.complete);
-                    newProj.addTodo(newTodo)
+                    newProj.addTodo(newTodo);
                 })
             }
             todoLists.addProject(newProj);
@@ -86,7 +86,7 @@ const setTodoLists = () => {
 }
 
 if (!localStorage.getItem('todoLists')) {
-    populateStorage()
+    populateStorage();
 } else {
     setTodoLists();
 }

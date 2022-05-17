@@ -97,7 +97,7 @@ const sideRender = (() => {
         inputDiv.style.display == 'block' ? inputDiv.style.display = 'none':
             null
     }
-    return {update, showProjectInput, hideProjectInput, clearInput};
+    return {update, showProjectInput, hideProjectInput, clearInput, sidebar};
 })();
 
 const eventListeners = (() => {
@@ -116,7 +116,7 @@ const eventListeners = (() => {
     taskSelect.addEventListener('click', sideControl.selectTask)
 })();
 
-sideRender.update()
+sideRender.sidebar();
 // start with all projects page
 allProjRender.page();
 

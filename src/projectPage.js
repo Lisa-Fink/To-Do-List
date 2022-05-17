@@ -26,14 +26,21 @@ const todoCreate = (() => {
                 const formatToday = yyyy + '-' + mm + '-' + dd;
                 filteredTodos = project.todos.filter(todo => todo.date == formatToday);
                 } else {
-                    filteredTodos = project.todos.
-                        filter(todo => {
-                           return  (todo.date && 
-                            formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0] <= 7) ?
-                                todo : null;
-                        });
+                    filteredTodos = project.todos.filter(todo => {
+                            if (todo.date) {
+                                const timeType = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[1]
+                                const distance = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0]
+                                if (timeType  == 'days' && distance <= 7) {
+                                    return todo
+                                }
+                                const todayTimes = ['hours', 'minutes', 'seconds']
+                                if (todayTimes.includes(timeType)) {
+                                    return todo;
+                                }
+                            } 
+                        })
+                    }
                 }
-            }
         return filteredTodos;
     }
     const list = (project, filter=null) => {
