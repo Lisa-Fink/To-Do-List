@@ -53,18 +53,20 @@ class Todo {
     }
 }
 // add project for testing
-let todo1 = new Todo('todo1');
-todo1.description = 'this is a description';
-let todo2 = new Todo('todo2');
-let todo3 = new Todo('todo3');
+let todo1 = new Todo('Cut down to 100 photos');
+todo1.description = 'make sure to include the photo of Sean and Sarah';
+let todo2 = new Todo('Edit all photos');
+let todo3 = new Todo('Make photo album');
+let todo4 = new Todo('Get album printed')
 
-let proj1 = new Project('Default Project');
+let proj1 = new Project('Birthday Party Photo Album');
 proj1.addTodo(todo1);
 proj1.addTodo(todo2);
 proj1.addTodo(todo3);
-todo1.date = '2022-05-21'
-todo2.date = '2022-05-21'
-todo3.date = '2022-05-21'
+proj1.addTodo(todo4);
+todo1.date = '2022-06-21'
+todo2.date = '2022-06-28'
+todo3.date = '2022-07-07'
 const todoLists = new ToDoList;
 todoLists.addProject(proj1);
 

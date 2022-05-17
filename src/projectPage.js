@@ -48,7 +48,8 @@ const todoCreate = (() => {
                 let topDiv = document.createElement('div');
 
                 let nameDiv = document.createElement('div');
-                nameDiv.innerText = task.name;
+                nameDiv.innerText = task.name.length < 31 ? task.name :
+                `${task.name.slice(0,30)}...`;
 
                 let dateDiv = document.createElement('div');
                 if (task.date) {
@@ -77,7 +78,11 @@ const todoCreate = (() => {
                 if (task.description) {
                     description = document.createElement('div');
                     description.classList.add('description');
-                    description.innerText = task.description;
+
+                    description.innerText = task.description.length < 301 ? 
+                        task.description :
+                        `${task.description.slice(0,300)}...`;
+
                     li.appendChild(description);
                 }
                 task.complete ? 
@@ -93,7 +98,7 @@ const todoCreate = (() => {
     const todoList = () => {
         const ul = document.createElement('ul');
         ul.classList.add('task-ul');
-        ul.id = 'to-do-list-ul';
+        ul.id = 'todo-list-ul';
         return ul
     }
     

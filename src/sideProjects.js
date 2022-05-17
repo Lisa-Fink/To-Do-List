@@ -68,8 +68,9 @@ const sideRender = (() => {
 
     const sidebar = () => {
         todoLists.projects.forEach(project => {
-            let li = document.createElement('li');
-            li.innerText = project.name;
+            let li = document.createElement('li'); 
+            li.innerText = project.name.length < 29 ? project.name: 
+            `${project.name.slice(0,28)}...`;
             li.data = project;
             projectUl.appendChild(li);
         })

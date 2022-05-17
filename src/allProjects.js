@@ -95,8 +95,8 @@ const allProjCreate = (() => {
         li.classList.add('proj-card');
 
         const projHead = document.createElement('h3');
-        projHead.innerText = project.name.length < 26 ? project.name: 
-            `${project.name.slice(0,26)}...`;
+        projHead.innerText = project.name.length < 29 ? project.name: 
+            `${project.name.slice(0,28)}...`;
 
         const projItems = document.createElement('p');
         projItems.innerText = `${project.todos.length} tasks`;

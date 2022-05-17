@@ -132,6 +132,7 @@ input, textarea {
     margin-left: 15px;
     color: #443082;
     font-style: italic;
+    word-break: break-word;
 }
 
 .complete {
@@ -279,7 +280,7 @@ input, textarea {
 .task-container {
     display: flex;
     align-items: center;
-    gap: 5px 80px;
+    gap: 5px 40px;
 }
 
 .empty {
