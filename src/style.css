@@ -281,3 +281,7 @@ input, textarea {
     align-items: center;
     gap: 5px 80px;
 }
+
+.empty {
+    text-align: center;
+}

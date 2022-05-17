@@ -37,7 +37,7 @@ const todoCreate = (() => {
         return filteredTodos;
     }
     const list = (project, filter=null) => {
-        const ul = document.getElementById('to-do-list-ul');
+        const ul = document.getElementById('todo-list-ul');
         if (project.todos) {
             let i = 1;
             let filteredTodos = filters(project, filter);
