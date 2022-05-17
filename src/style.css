@@ -149,10 +149,6 @@ input, textarea {
     vertical-align: middle;
 }
 
-#add-project-form {
-    display: none;
-}
-
 #sidepanel {
     background-color: darkgray;
     min-height: 600px;
@@ -182,9 +178,6 @@ input, textarea {
     text-align: center;
 } */
 
-#all-proj-container h3 {
-    color: white;
-}
 .proj-card {
     color: lightgrey;
     display: flex;
@@ -207,7 +200,6 @@ input, textarea {
 #add-project-form > div > span {
     padding: 5px;
     font-size: 2rem;
-    color: lightgray
 }
 
 #all-proj-container span:hover {
@@ -248,7 +240,7 @@ input, textarea {
     text-align: right;
 }
 
-.proj-card, #add-project-form {
+.proj-card {
     background-color: #280c57;
     border-radius: 20px;
     border: 2px #0f0421 solid;
@@ -263,7 +255,9 @@ input, textarea {
 #add-project-form {
     width: fit-content;
     margin: 10px auto;
+    padding: 15px;
     padding-bottom: 40px;
+    display: none;
 }
 
 #add-task {

@@ -176,9 +176,14 @@ const allProjRender = (() => {
         allProjContainer.appendChild(allProjCreate.projList());
     }
     const update = () => {
+        const addProj = document.getElementById('add-project-main')
+        addProj && addProj.style.display != 'block' ? 
+            addProj.style.display = 'none' : null;
         page()
     }
     const showForm = () => {
+        const addProj = document.getElementById('add-project-main')
+        addProj.style.display = 'none'
         const form = document.getElementById('add-project-form');
         form.style.display = 'block'
     }
