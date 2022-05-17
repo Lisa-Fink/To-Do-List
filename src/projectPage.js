@@ -1,4 +1,4 @@
-import { Todo } from "./classes";
+import { Todo, todoLists } from "./classes";
 import { sideRender } from "./sideProjects";
 import { makeIcon } from "./allProjects";
 import taskControl from "./sideHome";
@@ -263,6 +263,7 @@ const projectRender = (() => {
             contentDiv.data == 'important' ? taskControl.makeTasksPage('important') :
             contentDiv.data == 'today' ? taskControl.makeTasksPage('today') :
             contentDiv.data == 'week' ? taskControl.makeTasksPage('week') : null; 
+        todoLists.updateStorage();
         }
 
     const clearTodoForm = () => {

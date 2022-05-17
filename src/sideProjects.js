@@ -60,6 +60,7 @@ const sideRender = (() => {
     let contentDiv = document.getElementById('main-content');
     let projectUl = document.getElementById('projects');
     const input = document.getElementById('project-name-input');
+
     const update = () => {
         clear();
         sidebar();

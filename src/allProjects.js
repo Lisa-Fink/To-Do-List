@@ -180,6 +180,7 @@ const allProjRender = (() => {
         addProj && addProj.style.display != 'block' ? 
             addProj.style.display = 'none' : null;
         page()
+        todoLists.updateStorage();
     }
     const showForm = () => {
         const addProj = document.getElementById('add-project-main')

@@ -2,7 +2,7 @@ import { allProjRender } from "./allProjects";
 
 class ToDoList {
     constructor() {
-        this.projects = [];
+        this.projects = projects;
     }
     addProject(project) {
         this.projects.push(project);
@@ -21,6 +21,11 @@ class ToDoList {
     }
     removeProject(index) {
         this.projects = this.projects.slice(0,index).concat(this.projects.slice(index+1));
+    }
+    updateStorage() {
+        localStorage.setItem('todoLists', JSON.stringify(this));
+        const getTodoLists = localStorage.getItem('todoLists');
+        const parsedTodoLists = JSON.parse(getTodoLists)
     }
 }
 
@@ -45,31 +50,45 @@ class Project {
 }
 
 class Todo {
-    constructor(name, description, date, important) {
+    constructor(name, description, date, important, complete=false) {
         this.name = name;
         this.description = description;
         this.date = date;
         this.important = important;
+        this.complete = complete;
     }
 }
-// add project for testing
-let todo1 = new Todo('Cut down to 100 photos');
-todo1.description = 'make sure to include the photo of Sean and Sarah';
-let todo2 = new Todo('Edit all photos');
-let todo3 = new Todo('Make photo album');
-let todo4 = new Todo('Get album printed')
 
-let proj1 = new Project('Birthday Party Photo Album');
-proj1.addTodo(todo1);
-proj1.addTodo(todo2);
-proj1.addTodo(todo3);
-proj1.addTodo(todo4);
-todo1.date = '2022-06-21'
-todo1.important = true
-todo2.date = '2022-06-28'
-todo3.date = '2022-07-07'
-todo4.date = '2022-07-14'
-const todoLists = new ToDoList;
-todoLists.addProject(proj1);
+let todoLists = new ToDoList;
 
-export {ToDoList, Project, Todo, todoLists}
+const populateStorage = () => {
+    localStorage.setItem('todoLists', JSON.stringify(todoLists));
+}
+
+const setTodoLists = () => {
+    const getTodoLists = localStorage.getItem('todoLists');
+    const parsedTodoLists = JSON.parse(getTodoLists)
+    const proj = [...parsedTodoLists.projects]
+    
+    if (proj) {
+        proj.forEach(project => {
+            let newProj = new Project(project.name);
+            if (project.todos) {
+                project.todos.forEach(todo => {
+                    let newTodo = new Todo(todo.name, todo.description, 
+                        todo.date, todo.important, todo.complete);
+                    newProj.addTodo(newTodo)
+                })
+            }
+            todoLists.addProject(newProj);
+        })
+    }     
+}
+
+if (!localStorage.getItem('todoLists')) {
+    populateStorage()
+} else {
+    setTodoLists();
+}
+
+export {ToDoList, Project, Todo, todoLists};
