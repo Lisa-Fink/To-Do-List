@@ -46,10 +46,11 @@ body {
     background-color: lightgray;
     color: #0a0028;
 }
-input {
+input, textarea {
     border: none;
     border-radius: 15px;
     padding: 10px;
+    vertical-align: middle;
 }
 #main {
     display: flex;
@@ -78,14 +79,44 @@ input {
     display: none;
 }
 
-#to-do-form {
+#todo-form {
     display: none;
+}
+#todo-form span, #edit-todo-form span {
+    font-size: 1.75rem;
+}
+
+#todo-form input, #edit-todo-form input {
+    font-size: 1rem;
+}
+
+#star-form {
+    grid-row: 4/5;
+    grid-column: 1/3;
+    justify-self: center;
+}
+#button-form {
+    grid-row: 5/6;
+    grid-column: 1/3;
+    justify-self: center;
+}
+
+#input-container {
+    display: grid;
+    grid-template-columns: 15% 20%;
+    row-gap: 15px;
+    width: 80%;
+    justify-content: center;
+    justify-items: start;
+    margin: 30px auto 15px auto;
+    border-bottom: 2px #0a0028 solid;
 }
 
 .task-list {
     display: flex;
     gap: 5px 80px;
     align-items: center;
+    justify-content: space-between;
 }
 
 .task-list > div > span {
@@ -94,10 +125,13 @@ input {
 
 .task-ul > li {
     padding: 15px;
+    border-bottom: 2px #0f0421 solid;
 }
 
 .description {
     margin-left: 15px;
+    color: #443082;
+    font-style: italic;
 }
 
 .complete {
@@ -109,7 +143,7 @@ input {
 }
 
 .material-symbols-outlined:hover {
-    color: darkblue;
+    color: white;
 }
 .material-symbols-outlined{
     vertical-align: middle;
@@ -232,8 +266,24 @@ input {
     padding-bottom: 40px;
 }
 
-#add-project-main, #add-project-main span {
+#add-task {
+    display: block;
+}
+
+#add-project-main, #add-project-main span, #add-task, #add-task span {
     font-size: 2rem;
     padding: 15px;
     text-align: center;
+}
+
+/* task pgs */
+.task-ul {
+    width: 80%;
+    margin: 15px auto;
+}
+
+.task-container {
+    display: flex;
+    align-items: center;
+    gap: 5px 80px;
 }
