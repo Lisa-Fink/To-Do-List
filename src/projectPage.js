@@ -28,12 +28,12 @@ const todoCreate = (() => {
                 } else {
                     filteredTodos = project.todos.filter(todo => {
                             if (todo.date) {
-                                const timeType = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[1]
-                                const distance = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0]
+                                const timeType = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[1];
+                                const distance = formatDistanceToNowStrict(parseISO(todo.date)).split(' ')[0];
                                 if (timeType  == 'days' && distance <= 7) {
-                                    return todo
+                                    return todo;
                                 }
-                                const todayTimes = ['hours', 'minutes', 'seconds']
+                                const todayTimes = ['hours', 'minutes', 'seconds', 'day'];
                                 if (todayTimes.includes(timeType)) {
                                     return todo;
                                 }
