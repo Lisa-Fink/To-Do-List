@@ -1,5 +1,5 @@
 import { todoLists } from "./classes";
-import projectControl from "./projectPage";
+import {projectControl, todoCreate} from "./projectPage";
 import { contentController} from ".";
 import { sideRender, sideControl } from "./sideProjects";
 
@@ -89,18 +89,51 @@ const allProjCreate = (() => {
         })
         return projectUl;
     }
+    const projItems = (project) => {
+        const itemUl = document.createElement('ul');
+        itemUl.id = 'proj-items'
+
+        const star = makeIcon('star');
+        star.classList.add('important');
+        
+        const projTasksli = document.createElement('li');
+        const importantTasksli = document.createElement('li');
+        const todayTasksli = document.createElement('li');
+        const weekTasksli = document.createElement('li');
+        
+        const importantTasks = todoCreate.filters(project, 'important');
+        const todayTasks = todoCreate.filters(project, 'today');
+        const weekTasks = todoCreate.filters(project, 'week');
+
+        projTasksli.innerText = project.todos.length == 1 ? `1 task` :
+            project.todos.length > 1 ? `${project.todos.length} tasks`:
+            project.todos.length == 0 ? `no tasks`: null;
+        itemUl.appendChild(projTasksli)
+        
+        importantTasks.length >= 1 ? 
+            (importantTasksli.append(`${importantTasks.length} `, star), 
+            itemUl.appendChild(importantTasksli)) :
+                null;
+        todayTasks.length >= 1 ? 
+            (todayTasksli.innerText = `${todayTasks.length} due today`, 
+            itemUl.appendChild(todayTasksli)) :
+                null;
+        weekTasks.length >= 1 ? 
+            (weekTasksli.innerText = `${weekTasks.length} due this week`, 
+            itemUl.appendChild(weekTasksli)) :
+                null;
+        return itemUl;
+    }
+
     const projCard = (project) => {
         let li = document.createElement('li');
         li.data = project;
         li.classList.add('proj-card');
 
         const projHead = document.createElement('h3');
-        projHead.innerText = project.name.length < 29 ? project.name: 
-            `${project.name.slice(0,28)}...`;
-
-        const projItems = document.createElement('p');
-        projItems.innerText = `${project.todos.length} tasks`;
-
+        projHead.innerText = project.name.length < 16 ? project.name: 
+            `${project.name.slice(0,15)}...`;
+        
         const projLink = document.createElement('div');
         projLink.id = 'proj-links';
         const view = makeIcon('open_in_new');
@@ -118,7 +151,7 @@ const allProjCreate = (() => {
         projLink.addEventListener('click', allProjControl.projFunctions);
 
         topDiv.appendChild(projHead);
-        topDiv.appendChild(projItems);
+        topDiv.appendChild(projItems(project));
         li.appendChild(topDiv);
         li.appendChild(projLink);
         return li;

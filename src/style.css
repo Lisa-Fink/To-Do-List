@@ -120,6 +120,10 @@ input, textarea {
     justify-content: space-between;
 }
 
+.task-list:hover {
+    background-color: rgb(163, 162, 162);
+}
+
 .task-list > div > span {
     padding: 15px;
 }
@@ -177,8 +181,24 @@ input, textarea {
 
 /* All projects page */
 
+#proj-items {
+    min-height: 5rem;
+    margin: 10px 0px;
+    padding: 10px;
+    border-top: 1px lightgray solid;
+}
+
+#proj-items > li {
+    list-style: square inside;
+}
+
+#proj-items span {
+    vertical-align: top;
+}
+
 #proj-links {
     text-align: right;
+    border-top: 1px lightgray solid;
 }
 
 #add-project-form > div {
@@ -200,14 +220,12 @@ input, textarea {
 
 #all-proj-ul {
     display: grid;
-    grid-template-columns: 200px 200px 200px;
-    grid-auto-columns: 240px;
+    grid-template-columns: repeat(auto-fill, 240px);
     grid-auto-rows: minmax(240px, auto);
     gap: 25px;
     justify-content: center;
     margin: 0 auto;
     width: 80%;
-    
 }
 
 .proj-card > div > form {
@@ -220,6 +238,7 @@ input, textarea {
     text-align: center;
     word-wrap: break-word;
     border-radius: 15px;
+    min-height: 120px;
 }
 
 #project-input-buttons > span {
@@ -242,6 +261,7 @@ input, textarea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-shadow: 2px 2px #1c1826 ;
 }
 
 #all-proj-name-input {

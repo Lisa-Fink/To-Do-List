@@ -228,7 +228,7 @@ const todoCreate = (() => {
         return addTodo;
     }
 
-    return {addTodoBtn, todoForm, todoList, heading, list};
+    return {addTodoBtn, todoForm, todoList, heading, list, filters};
 })()
 
 
